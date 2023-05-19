@@ -1,19 +1,24 @@
-import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
-
-import { HeroesApp } from '../HeroesApp';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { LoginPage } from '../auth';
-import { MarvelPage, DcPage } from '../heroes';
+import { HeroesRoutes, childHeroesRoutes } from '../heroes';
+import { PrivateRoutes } from './PrivateRoutes';
+import { PublicRoutes } from './PublicRoutes';
 
 export const appRoutes = [
+    { 
+        path: 'login', 
+        element: 
+            <PublicRoutes>
+                <LoginPage />
+            </PublicRoutes>
+    },
     {
         path: '/',
-        element: <HeroesApp />,
-        children: [
-            { path: 'marvel', element: <MarvelPage /> },
-            { path: 'dc', element: <DcPage /> },
-            { path: 'login', element: <LoginPage /> },
-            { path: '/', element: <Navigate to="/marvel"/> }
-        ]
+        element:
+            <PrivateRoutes>
+                <HeroesRoutes />
+            </PrivateRoutes>,
+        children: childHeroesRoutes
     }
 ];
 
@@ -21,6 +26,6 @@ const router = createBrowserRouter( appRoutes );
 
 export const AppRouter = () => {
     return (
-        <RouterProvider router={router} />
+        <RouterProvider router={ router } />
     );
 }
